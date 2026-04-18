@@ -54,11 +54,16 @@ app.post('/tarefas', async function (req, res) {
     res.status(201).json({data})
     
 })
-app.put('/tarefas', function (req, res) {
-    res.json([])
+app.put('/tarefas:id', function (req, res) {
+     const { id } = req.params
+     res.json([])
 })
-app.delete('/tarefas', function (req, res) {
-    res.json([])
+app.delete('/tarefas:id', async function (req, res) {
+     const { id } = req.params
+    const { rows: data} = await pool.query("DELETE tasks (title, description) VALUES ($1, $2)", [
+    ])
+   
+    res.status(204).json({data})
 })
 
 app.listen(3000, function () {
