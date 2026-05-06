@@ -17,10 +17,36 @@ function App() {
     setLoading(false);
   }, []);
 
+//PATCH
+
+  const statusTarefas = useCallback(async(id) => {
+    
+    const response = await fetch (`http://localhost:3000/tarefas/${id}`, {
+      method: 'PATCH',
+    }) 
+    console.log(response)
+    if (response.ok) handleFetchTarefas()
+  }, [handleFetchTarefas] )
+ 
+
+// DELETE (FEITO POR EU)
+const deletar = useCallback(async (id) => {
+const response = await fetch(`http://localhost:3000/tarefas/${id}`, {
+    method: 'DELETE',
+  })
+  console.log(response)
+    if (response.ok) handleFetchTarefas();
+}, [handleFetchTarefas])
+
+
+
+
+// FINAL DO DELETE (FEITO POR EU)
+
   const adicionarItem = useCallback(async (title, description) => {
     setAddLoading(true);
     const response = await fetch('http://localhost:3000/tarefas', {
-      headers: {
+      headers: {  
         'Content-Type': 'application/json',
       },
       method: 'POST',
@@ -58,26 +84,55 @@ function App() {
     <div className="container">
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Título</label>
-          <input ref={inputTitle} type="text" name="title" placeholder="O que precisa ser feito?" required />
+          <label>Convidado</label>
+          <input ref={inputTitle} type="text" name="title" placeholder="Quem precisa ser adicionado?" required />
         </div>
-        <div className="form-group">
-          <label>Descrição</label>
-          <input ref={inputDescription} type="text" name="description" placeholder="Adicione detalhes..." />
-        </div>
-        <button type="submit">Salvar Tarefa</button>
-      </form>
+{/* Selecionar presunto */}
+      
 
-      {addLoading && <div className="loading">Salvando novo item...</div>}
+        <div className="form-group">
+     
+    
+        </div>
+     
+
+  <div>
+          <label for="Presente">Escolha seu presente:</label> 
+          <br></br>
+          <select ref={inputDescription}>
+            <option  disabled selected hidden>O que dará para os noivos?</option>
+            <option value="Camisa do Grêmio" >Camisa do Grêmio</option>
+            <option value="Pix de 5K">Pix</option>
+            <option value="Uma porsche muito foda">Porsche Blue</option>
+            <option value="Cruzeiro">Cruzeiro</option>
+            <option value="Uma katana grande e afiada🤤🤤">Katana</option>
+            <option value="🤤🤤🤤">Galo</option>
+            <option value="gostoso"> Alan patrick</option>
+          </select>
+        </div>
+   <button type="submit">Adicionar Convidado</button>
+      </form>
+      {addLoading && <div className="loading">Carregando Convidado...</div>}
 
       {loading ?
-        <div className="loading">Carregando itens...</div>
+        <div className="loading">Carregando Convidados...</div>
         : (
           <ul>
             {tarefas.map((item, index) => (
               <li key={index}>
                 <strong>{item.title}</strong>
                 {item.description && <span>{item.description}</span>}
+
+              
+
+              <div>
+                <input type = "checkbox" checked={item.completed??false} onChange= {() => statusTarefas(item.id)}/>
+                <label>Chegou</label>
+              </div>
+
+               <div>
+                <button onClick={() => deletar(item.id)}>DELETAR O CONVIDADO</button>
+                </div>
               </li>
             ))}
           </ul>
